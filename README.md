@@ -62,7 +62,7 @@ If you don't want to indefinitely cache results, or you don't have an eviction p
 const configuration = new Configuration({
   ...
 + baseOptions: {
-+   // In this example, specify a cache TTL of 24 hours before it expires:
++   // In this example, we specify a cache TTL of 24 hours before it expires:
 +   headers: { 'X-Proxy-TTL': 60 * 60 * 24 }
 + }
 });
