@@ -10,24 +10,22 @@ It only caches `POST` requests that have a JSON request body, as these tend to b
 
 Clone the repo and install dependencies.
 
-You will need to sign up for two services if you haven't already:
+You will need to sign up for two services (which both have free tiers):
 
-- [Cloudflare](https://www.cloudflare.com):
-- [Upstash](https://upstash.com): Cache is stored using Upstash's Worker-compatible redis-over-HTTP service.
+- [Cloudflare](https://www.cloudflare.com): Where our worker will be hosted.
+- [Upstash](https://upstash.com): We use Upstash's redis-over-HTTP service for storing cached OpenAI responses. Depending on your usage, you may try replacing Redis with [Cloudflare KV](https://developers.cloudflare.com/workers/runtime-apis/kv/) instead which is eventually consistent but will likely provide better read latency.
 
-Both Cloudflare and Upstash have generous free plans.
-
-Set up your redis secrets based on instructions in `wrangler.toml`.
+Finally, set up your redis secrets based on instructions in `wrangler.toml`.
 
 ### Usage
 
-Start the proxy server (will start at http://localhost:8787 by default):
+Start the proxy server at http://localhost:8787 with:
 
 ```
 yarn start
 ```
 
-Then, in your [openai/openai-node](https://github.com/openai/openai-node) configuration, pass in the new `basePath` so that it sends requests through your proxy rather than directly to OpenAI:
+Then, in your separate project where you have your [openai/openai-node](https://github.com/openai/openai-node) configuration, pass in the new `basePath` so that it sends requests through your proxy rather than directly to OpenAI:
 
 ```diff
 const { Configuration, OpenAIApi } = require("openai");
