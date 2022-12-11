@@ -1,24 +1,22 @@
 import { getCacheKey } from './cache';
-import { objectHash } from './utils';
-
-jest.mock('./utils.ts');
+import * as utils from './utils';
 
 describe('cache', () => {
   describe('getCacheKey', () => {
     beforeEach(() => {
-      (objectHash as jest.Mock).mockReturnValue('unique-sha-hash');
+      jest.spyOn(utils, 'objectHash');
     });
 
     it('returns a hash uniquely representing the params', async () => {
       const params = {
         method: 'POST',
         path: '/v1/completions',
-        authHeader: 'api-key',
+        authHeader: 'api-key-!',
         body: '{ "ok": true }',
       };
       const result = await getCacheKey(params);
-      expect(objectHash).toHaveBeenCalledWith(params);
-      expect(result).toEqual('unique-sha-hash');
+      expect(utils.objectHash).toHaveBeenCalledWith(params);
+      expect(result).toEqual('1a97143b720b3d82cf93a34a5a02c61de1492b18d813f4f1859251eef1a738be');
     });
 
     it('removes null or empty values', async () => {
@@ -29,11 +27,11 @@ describe('cache', () => {
         body: '',
       };
       const result = await getCacheKey(params);
-      expect(objectHash).toHaveBeenCalledWith({
+      expect(utils.objectHash).toHaveBeenCalledWith({
         method: 'POST',
         path: '/v1/completions',
       });
-      expect(result).toEqual('unique-sha-hash');
+      expect(result).toEqual('771798e93f4fbad36b4c89cd88d3752383224caf8e585661dc174feb25939f75');
     });
   });
 });

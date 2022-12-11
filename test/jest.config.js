@@ -4,6 +4,6 @@ module.exports = {
     '\\.ts$': 'ts-jest',
   },
   clearMocks: true,
-  testEnvironment: 'node',
+  testEnvironment: 'miniflare',
   setupFilesAfterEnv: ['./test/jest.setup.ts'],
 };
