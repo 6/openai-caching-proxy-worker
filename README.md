@@ -4,6 +4,8 @@ Basic caching proxy for OpenAI API, deployable as a [Cloudflare Worker](https://
 
 This can help you reduce your OpenAI costs (and get faster results) by returning cached responses for repeated requests.
 
+You can use different cache TTL configuration based on your needs. For example, the `text-davinci-003` model is 10x the cost of `text-curie-001` so you could choose to cache results for longer for davinci.
+
 **Client compatibility:**
 
 - [openai/openai-node](https://github.com/openai/openai-node): full compatibility, takes just a few lines of config to use
