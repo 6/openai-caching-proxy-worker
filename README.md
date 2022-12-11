@@ -32,7 +32,7 @@ const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
-+ basePath: 'http://localhost:8787/proxy',
++ basePath: 'http://localhost:8787/proxy', // point to local instance or Cloudflare deployment
 });
 const openai = new OpenAIApi(configuration);
 ```
