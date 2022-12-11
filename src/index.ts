@@ -9,7 +9,7 @@ export default {
     const isProxyRequest =
       request.method === 'POST' &&
       request.headers.get('content-type') === 'application/json' &&
-      ttl !== '0';
+      ttlString !== '0';
 
     if (isProxyRequest) {
       return await handleProxy({
