@@ -73,8 +73,6 @@ export class ResponseCache {
     response: Response;
     ttl: number | null;
   }): Promise<void> => {
-    // TODO: might be able to do ctx.waitUntil:
-    // https://developers.cloudflare.com/workers/examples/cache-api
     const body = await response.clone().text();
     const responseObject = {
       status: response.status,
