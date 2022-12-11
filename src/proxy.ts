@@ -1,4 +1,4 @@
-import { getCachedResponse, getCacheKey, writeCachedResponse } from './cache';
+import { getCacheKey, ResponseCache } from './cache';
 import { Env } from './env';
 import { getHeadersAsObject } from './utils';
 
@@ -12,7 +12,6 @@ interface HandleProxyOpts {
 export const handleProxy = async ({
   request,
   env,
-  ctx,
   ttl,
   pathname,
 }: HandleProxyOpts): Promise<Response> => {
@@ -29,11 +28,12 @@ export const handleProxy = async ({
     method: fetchMethod,
     path: fetchPath,
   });
+  const responseCache = new ResponseCache({ env });
 
   if (forceRefresh) {
     console.log('X-Proxy-Refresh was true, forcing a cache refresh.');
   } else {
-    const cachedResponse = await getCachedResponse({ cacheKey });
+    const cachedResponse = await responseCache.read({ cacheKey });
     if (cachedResponse) {
       console.log('Returning cached response.');
       return cachedResponse;
@@ -50,7 +50,7 @@ export const handleProxy = async ({
 
   if (response.ok) {
     console.log('Writing 2xx response to cache: ', { cacheKey, ttl });
-    await writeCachedResponse({
+    await responseCache.write({
       cacheKey,
       ttl,
       response,

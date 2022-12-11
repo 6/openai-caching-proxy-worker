@@ -37,5 +37,8 @@
     "lint:ci": "yarn lint:ts",
     "lint:ts": "eslint . --ext .js,.ts,.json",
     "prettier:all": "prettier --write \"**/*.+(js|jsx|ts|tsx|json|css|html)\""
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.18.1"
   }
 }

@@ -1,3 +1,5 @@
+import { Redis } from '@upstash/redis/cloudflare';
+import { Env } from './env';
 import { getHeadersAsObject } from './utils';
 
 export const objectHash = async (obj: Record<string, any>): Promise<string> => {
@@ -32,39 +34,54 @@ export const getCacheKey = async (props: GetCacheKeyProps): Promise<string> => {
   return hash;
 };
 
-interface GetCachedResponseProps {
-  cacheKey: string;
+interface CachedResponse {
+  status: number;
+  headers: Record<string, string>;
+  body: string;
 }
-export const getCachedResponse = async ({
-  cacheKey,
-}: GetCachedResponseProps): Promise<Response | null> => {
-  // for (const [key, value] of Object.entries(cachedResponse.headers)) {
-  // 	res.setHeader(key, value);
-  // }
-  // return res.status(cachedResponse.status).send(cachedResponse.body);
-  return null;
-};
 
-interface WriteCachedResponseProps {
-  cacheKey: string;
-  ttl: number | null;
-  response: Response;
-}
-export const writeCachedResponse = async ({
-  cacheKey,
-  ttl,
-  response,
-}: WriteCachedResponseProps): Promise<void> => {
-  const responseObject = {
-    status: response.status,
-    headers: getHeadersAsObject(response.headers),
+export class ResponseCache {
+  redis: Redis;
+
+  constructor({ env }: { env: Env }) {
+    this.redis = new Redis({
+      url: env.UPSTASH_REDIS_REST_URL,
+      token: env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  }
+
+  read = async ({ cacheKey }: { cacheKey: string }): Promise<Response | null> => {
+    const result = await this.redis.get(cacheKey);
+    if (result) {
+      // Note: Upstash seems to automatically parse it to JSON:
+      const cachedResponse =
+        typeof result === 'string' ? JSON.parse(result as string) : (result as CachedResponse);
+      return new Response(cachedResponse.body, {
+        headers: cachedResponse.headers,
+        status: cachedResponse.status,
+      });
+    }
+    return null;
+  };
+
+  write = async ({
+    cacheKey,
+    response,
+    ttl,
+  }: {
+    cacheKey: string;
+    response: Response;
+    ttl: number | null;
+  }): Promise<void> => {
     // TODO: might be able to do ctx.waitUntil:
     // https://developers.cloudflare.com/workers/examples/cache-api
-    body: await response.clone().text(),
+    const body = await response.clone().text();
+    const responseObject = {
+      status: response.status,
+      headers: getHeadersAsObject(response.headers),
+      body: body ? body : null,
+    };
+    const options = ttl != null ? { ex: ttl } : {};
+    await this.redis.set(cacheKey, JSON.stringify(responseObject), options);
   };
-  console.log('TODO: cache this!', responseObject);
-  // const client = await getClient();
-  // const options = ttl != null ? { EX: ttl } : {};
-  // await client.set(cacheKey, JSON.stringify(response), options);
-  return;
-};
+}
