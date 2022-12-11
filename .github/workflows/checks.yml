@@ -1,0 +1,34 @@
+name: checks
+
+# Controls when the action will run.
+on:
+  push:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - run: yarn install
+
+      - name: yarn deduplicate
+        run: |
+          DUPE_LIST=$(yarn run -s yarn-deduplicate --list)
+          DUPES=$(printf "$DUPE_LIST" | wc -l | tr -d ' ')
+          if [ "$DUPES" -eq 0 ]; then
+            echo "no duplicate resolutions to resolve"
+            exit 0
+          fi
+          printf  "duplicates found: \n\n%s" "$DUPE_LIST"
+          exit 1
+
+      - name: Check TSC types
+        run: yarn check-types
+
+      - name: ESLint
+        run: yarn lint
