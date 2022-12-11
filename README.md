@@ -2,7 +2,7 @@
 
 Basic caching proxy for OpenAI API, deployable as a [Cloudflare Worker](https://workers.cloudflare.com/).
 
-This can help reduce OpenAI costs (and get faster results) by returning cached responses for repeated requests.
+This can help you reduce your OpenAI costs (and get faster results) by returning cached responses for repeated requests.
 
 It only caches `POST` requests that have a JSON request body, as these tend to be the slowest and are the only ones that cost money (for now).
 
