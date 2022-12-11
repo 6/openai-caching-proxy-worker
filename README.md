@@ -5,6 +5,7 @@ Basic caching proxy for OpenAI API, deployable as a [Cloudflare Worker](https://
 This can help you reduce your OpenAI costs (and get faster results) by returning cached responses for repeated requests.
 
 **Client compatibility:**
+
 - [openai/openai-node](https://github.com/openai/openai-node): full compatibility, takes just a few lines of config to use
 - [openai/openai-python](https://github.com/openai/openai-python): partial compatibility, supports caching but no TTL options so you'll need a cache eviction policy
 
@@ -85,6 +86,8 @@ const configuration = new Configuration({
 });
 ```
 
-### Samples
+### Example client usage
 
-See `/samples/sample-usage.ts` for a full example of how to call this proxy with your openai client.
+See `/examples/` directory for a full example of how to call this proxy with your openai client.
+
+This includes both Node.js and Python client usage examples.

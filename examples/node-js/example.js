@@ -1,6 +1,6 @@
-// Basic demo usage for a node.js client.
+// Basic demo usage for openai's node.js client.
 // Run with:
-// yarn ts-node samples/sample-usage.ts
+// node example.js
 import * as dotenv from 'dotenv';
 import { Configuration, OpenAIApi } from 'openai';
 
