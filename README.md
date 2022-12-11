@@ -21,13 +21,13 @@ Set up your redis secrets based on instructions in `wrangler.toml`.
 
 ### Usage
 
-Start the proxy server (will start at http://localhost:8787 by default):
+Start the proxy server at http://localhost:8787 with:
 
 ```
 yarn start
 ```
 
-Then, in your [openai/openai-node](https://github.com/openai/openai-node) configuration, pass in the new `basePath` so that it sends requests through your proxy rather than directly to OpenAI:
+Then, in your separate project where you have your [openai/openai-node](https://github.com/openai/openai-node) configuration, pass in the new `basePath` so that it sends requests through your proxy rather than directly to OpenAI:
 
 ```diff
 const { Configuration, OpenAIApi } = require("openai");
