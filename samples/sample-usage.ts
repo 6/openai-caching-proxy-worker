@@ -27,22 +27,20 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const makeSampleRequests = async () => {
-  const models = await openai.listModels();
-  console.log({ models });
-  // const completionOpts = {
-  //   model: 'text-ada-001',
-  //   prompt: 'write a poem about computers',
-  // };
-  // const completion1 = await openai.createCompletion(completionOpts);
-  // console.log('completion 1:', completion1.data);
+  const completionOpts = {
+    model: 'text-ada-001',
+    prompt: 'write a poem about computers',
+  };
+  const completion1 = await openai.createCompletion(completionOpts);
+  console.log('completion 1:', completion1.data);
 
-  // // Ensure that another completion with the same prompt but
-  // // slightly different options returns a different response:
-  // const completion2 = await openai.createCompletion({
-  //   ...completionOpts,
-  //   max_tokens: 50,
-  // });
-  // console.log('completion 2:', completion2.data);
+  // Ensure that another completion with the same prompt but
+  // slightly different options returns a different response:
+  const completion2 = await openai.createCompletion({
+    ...completionOpts,
+    max_tokens: 50,
+  });
+  console.log('completion 2:', completion2.data);
 };
 
 const main = async () => {
@@ -53,7 +51,7 @@ const main = async () => {
   // Make the same requests a second time to confirm that
   // they are returning a cached result rather than
   // hitting OpenAI:
-  // await makeSampleRequests();
+  await makeSampleRequests();
 };
 
 main();
