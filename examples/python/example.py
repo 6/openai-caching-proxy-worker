@@ -14,7 +14,7 @@ if not api_key:
 
 openai.api_key = api_key
 
-# Set this to your local instance or Cloudflare Deployment:
+# Set this to your local instance or Cloudflare deployment:
 openai.api_base = "http://localhost:8787/proxy"
 
 def make_sample_requests():
@@ -26,7 +26,7 @@ def make_sample_requests():
   print('Completion 1:')
   print(completion1)
 
-  # Sample prompt but different options (different cache)
+  # Same prompt but different options (different cache)
   completion2 = openai.Completion.create(
     model="text-ada-001",
     prompt="write a poem about computers",
