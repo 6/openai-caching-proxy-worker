@@ -14,6 +14,7 @@ if (!apiKey) {
 
 const configuration = new Configuration({
   apiKey,
+  // Set this to your local instance or Cloudflare deployment
   basePath: `http://localhost:8787/proxy`,
   baseOptions: {
     headers: {
