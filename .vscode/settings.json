@@ -1,0 +1,11 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "search.exclude": {
+    "coverage/**/*": true,
+    "node_modules/**/*": true,
+    ".eslintcache": true
+  },
+  "typescript.validate.enable": true
+}
