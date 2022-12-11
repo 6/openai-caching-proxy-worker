@@ -1,18 +1,6 @@
 import { Redis } from '@upstash/redis/cloudflare';
 import { Env } from './env';
-import { getHeadersAsObject } from './utils';
-
-export const objectHash = async (obj: Record<string, any>): Promise<string> => {
-  const stringifiedObj = JSON.stringify(obj);
-  const arrayBuffer = await crypto.subtle.digest(
-    {
-      name: 'SHA-256',
-    },
-    new TextEncoder().encode(stringifiedObj),
-  );
-  // https://github.com/cmackenzie1/holster/tree/main/workers/hash
-  return [...new Uint8Array(arrayBuffer)].map((x) => x.toString(16).padStart(2, '0')).join('');
-};
+import { getHeadersAsObject, objectHash } from './utils';
 
 interface GetCacheKeyProps {
   method: string;
