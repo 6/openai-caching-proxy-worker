@@ -7,6 +7,10 @@ compatibility_date = "2022-12-11"
 
 # This cloudflare worker uses Upstash (hosted redis-over-REST):
 # https://docs.upstash.com/redis/quickstarts/cloudflareworkers
+# 
+# After signing up for a free account at upstash.com, set your secrets below based on instructions
+# here for `wrangler secret put` (or alternatively use the Cloudflare Workers web UI):
+# https://developers.cloudflare.com/workers/platform/environment-variables/#adding-secrets-via-wrangler
 
 # The necessary secrets are:
 # - UPSTASH_REDIS_REST_TOKEN
