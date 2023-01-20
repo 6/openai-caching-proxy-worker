@@ -12,8 +12,16 @@ export const getCacheKey = async (props: GetCacheKeyProps): Promise<string> => {
   // https://stackoverflow.com/a/40924449
   const propsWithoutUndefined = Object.keys(props).reduce((acc, key) => {
     const _acc: Record<string, any> = acc;
-    const propValue = (props as any)[key];
-    if (propValue != null && propValue !== '') {
+    let propValue = (props as any)[key];
+    if (key === 'body' && propValue !== '') {
+      try {
+        const body = JSON.parse(propValue);
+        propValue = JSON.stringify(body, Object.keys(body).sort());
+      } catch (_error) {
+        propValue = '';
+      }
+    }
+    if (propValue !== null && propValue !== '') {
       _acc[key] = propValue;
     }
     return _acc;
