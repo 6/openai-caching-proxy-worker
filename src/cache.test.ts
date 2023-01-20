@@ -33,5 +33,25 @@ describe('cache', () => {
       });
       expect(result).toEqual('771798e93f4fbad36b4c89cd88d3752383224caf8e585661dc174feb25939f75');
     });
+
+    it('returns a same hash uniquely representing the params when body has different order', async () => {
+      let params = {
+        method: 'POST',
+        path: '/v1/completions',
+        authHeader: null,
+        body: '{"key1":"1","key2":"2"}',
+      };
+      let result = await getCacheKey(params);
+      expect(result).toEqual('91b1af0c3f20778905ab588460bcb1d14b4621445f32fd871d7fe23056142923');
+
+      params = {
+        method: 'POST',
+        path: '/v1/completions',
+        authHeader: null,
+        body: '{"key2":"2","key1":"1"}',
+      };
+      result = await getCacheKey(params);
+      expect(result).toEqual('91b1af0c3f20778905ab588460bcb1d14b4621445f32fd871d7fe23056142923');
+    });
   });
 });
