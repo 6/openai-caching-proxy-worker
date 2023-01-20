@@ -12,11 +12,11 @@ describe('cache', () => {
         method: 'POST',
         path: '/v1/completions',
         authHeader: 'api-key-!',
-        body: '{ "ok": true }',
+        body: '{"ok":true}',
       };
       const result = await getCacheKey(params);
       expect(utils.objectHash).toHaveBeenCalledWith(params);
-      expect(result).toEqual('1a97143b720b3d82cf93a34a5a02c61de1492b18d813f4f1859251eef1a738be');
+      expect(result).toEqual('de8cb85a7a697a5ee1458b31857c4db1c94760b2a14681052170bed55bf6db1b');
     });
 
     it('removes null or empty values', async () => {
