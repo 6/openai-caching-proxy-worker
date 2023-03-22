@@ -53,5 +53,28 @@ describe('cache', () => {
       result = await getCacheKey(params);
       expect(result).toEqual('91b1af0c3f20778905ab588460bcb1d14b4621445f32fd871d7fe23056142923');
     });
+
+    it('returns a different hash uniquely representing the params when body has different values', async () => {
+      let params = {
+        method: 'POST',
+        path: '/v1/chat/completions',
+        authHeader: null,
+        body: '{"model": "gpt-4", "messages": [{"role": "user","content": "Example 1"}]}',
+        moderation: true,
+      };
+      let result = await getCacheKey(params);
+      expect(result).toEqual('ca1346d5b14a10b852c82502d525ef5d081c5068dc40c1d451e13cfc22417af1');
+
+      params = {
+        method: 'POST',
+        path: '/v1/chat/completions',
+        authHeader: null,
+        body: '{"model": "gpt-4", "messages": [{"role": "user","content": "Example 2"}]}',
+        moderation: true,
+      };
+      result = await getCacheKey(params);
+      expect(result).toEqual('433436d4185941ab1f0d2158e94c93167d7d154a052f96dda81b0e7fa5560eaa');
+    });
+
   });
 });

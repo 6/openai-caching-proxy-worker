@@ -2,12 +2,39 @@ import { Redis } from '@upstash/redis/cloudflare';
 import { Env } from './env';
 import { getHeadersAsObject, objectHash } from './utils';
 
+interface AnyObject {
+  [key: string]: any;
+}
+
+function sortObjectKeys(obj: AnyObject): AnyObject {
+  const sortedKeys = Object.keys(obj).sort();
+  const sortedObj: AnyObject = {};
+
+  sortedKeys.forEach((key) => {
+    if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+      sortedObj[key] = sortObjectKeys(obj[key]);
+    } else if (Array.isArray(obj[key])) {
+      sortedObj[key] = obj[key].map((item: any) => {
+        if (typeof item === 'object' && !Array.isArray(item)) {
+          return sortObjectKeys(item);
+        }
+        return item;
+      });
+    } else {
+      sortedObj[key] = obj[key];
+    }
+  });
+
+  return sortedObj;
+}
+
 interface GetCacheKeyProps {
   method: string;
   path: string;
   authHeader: string | null;
   body: string | null;
 }
+
 export const getCacheKey = async (props: GetCacheKeyProps): Promise<string> => {
   // https://stackoverflow.com/a/40924449
   const propsWithoutUndefined = Object.keys(props).reduce((acc, key) => {
@@ -16,7 +43,23 @@ export const getCacheKey = async (props: GetCacheKeyProps): Promise<string> => {
     if (key === 'body' && propValue !== '') {
       try {
         const body = JSON.parse(propValue);
-        propValue = JSON.stringify(body, Object.keys(body).sort());
+        const sortedBody: AnyObject = {};
+        const sortedKeys = Object.keys(body).sort();
+        sortedKeys.forEach((key) => {
+          if (typeof body[key] === 'object' && !Array.isArray(body[key])) {
+            sortedBody[key] = sortObjectKeys(body[key]);
+          } else if (Array.isArray(body[key])) {
+            sortedBody[key] = body[key].map((item: any) => {
+              if (typeof item === 'object' && !Array.isArray(item)) {
+                return sortObjectKeys(item);
+              }
+              return item;
+            });
+          } else {
+            sortedBody[key] = body[key];
+          }
+        });
+        propValue = JSON.stringify(sortedBody);
       } catch (_error) {
         propValue = '';
       }
