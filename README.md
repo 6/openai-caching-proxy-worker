@@ -10,6 +10,7 @@ The proxy server supports specifying cache TTL on a per-request basis, so you co
 
 - [openai/openai-node](https://github.com/openai/openai-node): full compatibility, takes just a few lines of config to use
 - [openai/openai-python](https://github.com/openai/openai-python): partial compatibility, supports caching but no TTL options so you'll need a cache eviction policy
+- [alexrudall/ruby-openai](https://github.com/alexrudall/ruby-openai): partial compatibility, supports caching but no TTL options so you'll need a cache eviction policy
 
 It only caches `POST` requests that have a JSON request body, as these tend to be the slowest and are the only ones that cost money (for now).
 
@@ -92,4 +93,4 @@ const configuration = new Configuration({
 
 See `/examples/` directory for a full example of how to call this proxy with your openai client.
 
-This includes both Node.js and Python client usage examples.
+This includes both Node.js, Python and Ruby client usage examples.
