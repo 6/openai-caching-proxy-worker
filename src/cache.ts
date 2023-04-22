@@ -80,17 +80,29 @@ interface CachedResponse {
 }
 
 export class ResponseCache {
-  redis: Redis;
+  redis: Redis | undefined;
+  kv: KVNamespace | undefined;
 
   constructor({ env }: { env: Env }) {
-    this.redis = new Redis({
-      url: env.UPSTASH_REDIS_REST_URL,
-      token: env.UPSTASH_REDIS_REST_TOKEN,
-    });
+    if (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN) {
+      this.redis = new Redis({
+        url: env.UPSTASH_REDIS_REST_URL,
+        token: env.UPSTASH_REDIS_REST_TOKEN,
+      });
+    } else {
+      this.kv = env.OPENAI_CACHE;
+    }
   }
 
   read = async ({ cacheKey }: { cacheKey: string }): Promise<Response | null> => {
-    const result = await this.redis.get(cacheKey);
+    let result;
+    if (this.redis) {
+      result = await this.redis.get(cacheKey);
+    } else if (this.kv) {
+      result = await this.kv.get(cacheKey);
+    } else {
+      return null;
+    }
     if (result) {
       // Note: Upstash seems to automatically parse it to JSON:
       const cachedResponse =
@@ -118,7 +130,12 @@ export class ResponseCache {
       headers: getHeadersAsObject(response.headers),
       body: body ? body : null,
     };
-    const options = ttl != null ? { ex: ttl } : {};
-    await this.redis.set(cacheKey, JSON.stringify(responseObject), options);
+    if (this.redis) {
+      const options = ttl != null ? { ex: ttl } : {};
+      await this.redis.set(cacheKey, JSON.stringify(responseObject), options);
+    } else if (this.kv) {
+      const options = ttl != null ? { expirationTtl: ttl } : {};
+      await this.kv.put(cacheKey, JSON.stringify(responseObject), options);
+    }
   };
 }
