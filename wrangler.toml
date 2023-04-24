@@ -2,16 +2,22 @@ name = "openai-caching-proxy-worker"
 main = "src/index.ts"
 compatibility_date = "2022-12-11"
 
-# https://developers.cloudflare.com/workers/platform/environment-variables/#comparing-secrets-and-environment-variables
-[vars]
+# This cloudflare worker uses either Upstash or workers KV to store cache.
 
-# This cloudflare worker uses Upstash (hosted redis-over-REST):
+# To use Upstash (hosted redis-over-REST),
 # https://docs.upstash.com/redis/quickstarts/cloudflareworkers
 # 
-# After signing up for a free account at upstash.com, set your secrets below based on instructions
+# 1. signing up for a free account at upstash.com, set your secrets below based on instructions
 # here for `wrangler secret put` (or alternatively use the Cloudflare Workers web UI):
 # https://developers.cloudflare.com/workers/platform/environment-variables/#adding-secrets-via-wrangler
-
-# The necessary secrets are:
+# 2. Uncomment following environment variables config:
+# [vars]
 # - UPSTASH_REDIS_REST_TOKEN
 # - UPSTASH_REDIS_REST_URL
+
+# To use workers KV,
+# 1. Run `wrangler kv:namespace create <YOUR_NAMESPACE>` in your terminal
+# 2. Uncomment following config and fill in <YOUR_ID>:
+# kv_namespaces = [
+#    { binding = "OPENAI_CACHE", id = "<YOUR_ID>" }
+# ]

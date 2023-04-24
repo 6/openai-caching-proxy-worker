@@ -21,9 +21,11 @@ Clone the repo and install dependencies.
 You will need to sign up for two services (which both have free tiers):
 
 - [Cloudflare](https://www.cloudflare.com): Where our worker will be hosted.
-- [Upstash](https://upstash.com): We use Upstash's redis-over-HTTP service for storing cached OpenAI responses. Depending on your usage, you may try replacing Redis with [Cloudflare KV](https://developers.cloudflare.com/workers/runtime-apis/kv/) instead which is eventually consistent but will likely provide better read latency.
+- [Upstash](https://upstash.com): We use Upstash's redis-over-HTTP service for storing cached OpenAI responses.
 
 Finally, set up your redis secrets based on instructions in `wrangler.toml`.
+
+Depending on your usage, you may try replacing Redis with [Cloudflare KV](https://developers.cloudflare.com/workers/runtime-apis/kv/) instead which is eventually consistent but will likely provide better read latency. Check `wrangler.toml` for setup instructions.
 
 ### Usage
 
