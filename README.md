@@ -1,3 +1,6 @@
+> [!NOTE]
+> As of October 2024, OpenAI now officially supports prompt caching in most models: https://openai.com/index/api-prompt-caching/. It is recommended that you use OpenAI's official implementation instead.
+
 # openai-caching-proxy-worker
 
 Basic caching proxy for OpenAI API, deployable as a [Cloudflare Worker](https://workers.cloudflare.com/).
